@@ -1,24 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import Login from "./components/Login/login"
+import Home from "./components/Home/home";
+import { checkAuth } from "./utils/checkAuth";
+import { useEffect } from "react";
+
+function Root() {
+  const navigate = useNavigate();
+
+  // Check the authentication status
+  const isAuthenticated = checkAuth();
+
+  useEffect(() => {
+     // If the user is not authenticated, redirect to the login page
+    if (!isAuthenticated) {
+      navigate("/login", { replace: true })
+    }
+  }, []);
+
+  return (
+    <div>
+      <Routes>
+        <Route exact path="/" element={<Home />} />
+        <Route exact path="/login" element={<Login />} />
+      </Routes>
+    </div>
+  );
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Root />
+    </BrowserRouter>
   );
 }
 
